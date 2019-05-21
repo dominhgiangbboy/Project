@@ -44,22 +44,11 @@ component MUX_24to1 is
 		DOUT:OUT STD_LOGIC);
 end component;
 ----------------------------------------------------------------
-signal data_divider0, data_divider1,data_divider2 : std_LOGIC_VECTOR(31 downto 0);
-signal data_divider3, data_divider4,data_divider5 : std_LOGIC_VECTOR(31 downto 0);
-signal data_divider6, data_divider7 : std_LOGIC_VECTOR(31 downto 0);
 type mang1 is array (31 downto 0 ) of std_logic_vector(2 downto 0);
 signal sel : mang1;
 signal start : std_logic;
-signal data_come0,data_come1,data_come2,data_come3 : std_logic_vector(7 downto 0);
-signal data_come4,data_come5,data_come6,data_come7 : std_logic_vector(7 downto 0);
-signal data_come8,data_come9,data_come10,data_come11 : std_logic_vector(7 downto 0);
-signal data_come12,data_come13,data_come14,data_come15 : std_logic_vector(7 downto 0);
-signal data_come16,data_come17,data_come18,data_come19 : std_logic_vector(7 downto 0);
-signal data_come20,data_come21,data_come22,data_come23 : std_logic_vector(7 downto 0);
-signal data_come24,data_come25,data_come26,data_come27 : std_logic_vector(7 downto 0);
-signal data_come28,data_come29,data_come30,data_come31 : std_logic_vector(7 downto 0);
 signal data_out : std_logic_vector(31 downto 0);
-signal data_base : std_logic_vector(23 downto 0):= "111111111111111111111111";
+signal data_base : std_logic_vector(23 downto 0):= "010101111001111000110110";
 type mang2 is array (31 downto 0) of std_logic_vector(4 downto 0);
 signal data_came0,data_came1,data_came2,data_came3 : std_logic_vector(23 downto 0);
 signal data_came4,data_came5,data_came6,data_came7 : std_logic_vector(23 downto 0);
@@ -79,296 +68,18 @@ signal output16,output17,output18,output19 : std_logic_vector(31 downto 0);
 signal output20,output21,output22,output23 : std_logic_vector(31 downto 0);
 signal index8,index7,index6,index5,index4,index3,index2,index1 : integer range 0 to 31;
 signal comparison : mang2 := ("11111","11110","11101","11100","11011","11010","11001","11000","10111","10110","10101","10100","10011","10010","10001","10000","01111","01110","01101","01100","01011","01010","01001","01000","00111","00110","00101","00100","00011","00010","00001","00000");
-signal result : mang2     := ("00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000","00000");
+signal result : mang2     := ("11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111","11111");
 signal count : integer range 0 to 80:= 0;
 signal count1 : integer range -1 to 31 := 31;
 signal count2 : integer range -1 to 23 := 23;
+signal count22 : integer range 0 to 23 := 23;
+signal count11 : integer range 0 to 31 := 31;
 type mang3 is array (23 downto 0) of std_logic_vector(4 downto 0);
 signal tmp, tmp1 : mang3;
 signal temp8,temp7,temp6,temp5,temp4,temp3,temp2,temp1,temp0 : std_logic_vector(4 downto 0);
 -------------------------------------------------------------------------------------------
 begin
 
-data_in_demux1 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(0),
-	sel => bit_location(4 downto 0),
-	en => ready,
-	B => data_divider0);
------------------------------------------------------------
-data_in_demux2 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(1),
-	sel => bit_location(9 downto 5),
-	en => ready,
-	B => data_divider1);
------------------------------------------------------------
-data_in_demux3 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(2),
-	sel => bit_location(14 downto 10),
-	en => ready,
-	B => data_divider2);
------------------------------------------------------------
-data_in_demux4 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(3),
-	sel => bit_location(19 downto 15),
-	en => ready,
-	B => data_divider3);
------------------------------------------------------------
-data_in_demux5 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(4),
-	sel => bit_location(24 downto 20),
-	en => ready,
-	B => data_divider4);
------------------------------------------------------------
-data_in_demux6 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(5),
-	sel => bit_location(29 downto 25),
-	en => ready,
-	B => data_divider5);
------------------------------------------------------------
-data_in_demux7 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(6),
-	sel => bit_location(34 downto 30),
-	en => ready,
-	B => data_divider6);
------------------------------------------------------------
-data_in_demux8 : demux_1to32_1 port map (
-	clk => clk,
-	A => data_in(7),
-	sel => bit_location(39 downto 35),
-	en => ready,
-	B => data_divider7);
------------------------------------------------------------
-data_in_mux1 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come0,
-	SEL => sel(0),
-	enable => ready,
-	DOUT => data_out(0));
------------------------------------------------------------
-data_in_mux2 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come1,
-	SEL => sel(1),
-	enable => ready,
-	DOUT => data_out(1));
------------------------------------------------------------
-data_in_mux3 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come2,
-	SEL => sel(2),
-	enable => ready,
-	DOUT => data_out(2));
------------------------------------------------------------
-data_in_mux4 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come3,
-	SEL => sel(3),
-	enable => ready,
-	DOUT => data_out(3));
------------------------------------------------------------
-data_in_mux5 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come4,
-	SEL => sel(4),
-	enable => ready,
-	DOUT => data_out(4));
------------------------------------------------------------
-data_in_mux6 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come5,
-	SEL => sel(5),
-	enable => ready,
-	DOUT => data_out(5));
------------------------------------------------------------
-data_in_mux7 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come6,
-	SEL => sel(6),
-	enable => ready,
-	DOUT => data_out(6));
------------------------------------------------------------
-data_in_mux8 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come7,
-	SEL => sel(7),
-	enable => ready,
-	DOUT => data_out(7));
------------------------------------------------------------
-data_in_mux9 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come8,
-	SEL => sel(8),
-	enable => ready,
-	DOUT => data_out(8));
------------------------------------------------------------
-data_in_mux10 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come9,
-	SEL => sel(9),
-	enable => ready,
-	DOUT => data_out(9));
------------------------------------------------------------
-data_in_mux11 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come10,
-	SEL => sel(10),
-	enable => ready,
-	DOUT => data_out(10));
------------------------------------------------------------
-data_in_mux12 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come11,
-	SEL => sel(11),
-	enable => ready,
-	DOUT => data_out(11));
------------------------------------------------------------
-data_in_mux13 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come12,
-	SEL => sel(12),
-	enable => ready,
-	DOUT => data_out(12));
------------------------------------------------------------
-data_in_mux14 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come13,
-	SEL => sel(13),
-	enable => ready,
-	DOUT => data_out(13));
------------------------------------------------------------
-data_in_mux15 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come14,
-	SEL => sel(14),
-	enable => ready,
-	DOUT => data_out(14));
------------------------------------------------------------
-data_in_mux16 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come15,
-	SEL => sel(15),
-	enable => ready,
-	DOUT => data_out(15));
------------------------------------------------------------
-data_in_mux17 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come16,
-	SEL => sel(16),
-	enable => ready,
-	DOUT => data_out(16));
------------------------------------------------------------
-data_in_mux18 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come17,
-	SEL => sel(17),
-	enable => ready,
-	DOUT => data_out(17));
------------------------------------------------------------
-data_in_mux19 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come18,
-	SEL => sel(18),
-	enable => ready,
-	DOUT => data_out(18));
------------------------------------------------------------
-data_in_mux20 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come19,
-	SEL => sel(19),
-	enable => ready,
-	DOUT => data_out(19));
------------------------------------------------------------
-data_in_mux21 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come20,
-	SEL => sel(20),
-	enable => ready,
-	DOUT => data_out(20));
------------------------------------------------------------
-data_in_mux22 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come21,
-	SEL => sel(21),
-	enable => ready,
-	DOUT => data_out(21));
------------------------------------------------------------
-data_in_mux23 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come22,
-	SEL => sel(22),
-	enable => ready,
-	DOUT => data_out(22));
------------------------------------------------------------
-data_in_mux24 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come23,
-	SEL => sel(23),
-	enable => ready,
-	DOUT => data_out(23));
------------------------------------------------------------
-data_in_mux25 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come24,
-	SEL => sel(24),
-	enable => ready,
-	DOUT => data_out(24));
------------------------------------------------------------
-data_in_mux26 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come25,
-	SEL => sel(25),
-	enable => ready,
-	DOUT => data_out(25));
------------------------------------------------------------
-data_in_mux27 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come26,
-	SEL => sel(26),
-	enable => ready,
-	DOUT => data_out(26));
------------------------------------------------------------
-data_in_mux28 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come27,
-	SEL => sel(27),
-	enable => ready,
-	DOUT => data_out(27));
------------------------------------------------------------
-data_in_mux29 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come28,
-	SEL => sel(28),
-	enable => ready,
-	DOUT => data_out(28));
------------------------------------------------------------
-data_in_mux30 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come29,
-	SEL => sel(29),
-	enable => ready,
-	DOUT => data_out(29));
------------------------------------------------------------
-data_in_mux31 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come30,
-	SEL => sel(30),
-	enable => ready,
-	DOUT => data_out(30));
------------------------------------------------------------
-data_in_mux32 : MUX_8to1 port map(
-	clk => clk,
-	DIN => data_come31,
-	SEL => sel(31),
-	enable => ready,
-	DOUT => data_out(31));
------------------------------------------------------------
 data_base_demux1: demux_1to32_1 port map (
 	clk => clk,
 	A => data_base(0),
@@ -761,39 +472,7 @@ data_base_mux32: MUX_24to1 port map(
 	enable => start,
 	DOUT => output(31));
 -------------------------------------------------------------
-data_come0 <= data_divider7(0)&data_divider6(0)&data_divider5(0)&data_divider4(0)&data_divider3(0)&data_divider2(0)&data_divider1(0)&data_divider0(0);
-data_come1 <= data_divider7(1)&data_divider6(1)&data_divider5(1)&data_divider4(1)&data_divider3(1)&data_divider2(1)&data_divider1(1)&data_divider0(1);
-data_come2 <= data_divider7(2)&data_divider6(2)&data_divider5(2)&data_divider4(2)&data_divider3(2)&data_divider2(2)&data_divider1(2)&data_divider0(2);
-data_come3 <= data_divider7(3)&data_divider6(3)&data_divider5(3)&data_divider4(3)&data_divider3(3)&data_divider2(3)&data_divider1(3)&data_divider0(3);
-data_come4 <= data_divider7(4)&data_divider6(4)&data_divider5(4)&data_divider4(4)&data_divider3(4)&data_divider2(4)&data_divider1(4)&data_divider0(4);
-data_come5 <= data_divider7(5)&data_divider6(5)&data_divider5(5)&data_divider4(5)&data_divider3(5)&data_divider2(5)&data_divider1(5)&data_divider0(5);
-data_come6 <= data_divider7(6)&data_divider6(6)&data_divider5(6)&data_divider4(6)&data_divider3(6)&data_divider2(6)&data_divider1(6)&data_divider0(6);
-data_come7 <= data_divider7(7)&data_divider6(7)&data_divider5(7)&data_divider4(7)&data_divider3(7)&data_divider2(7)&data_divider1(7)&data_divider0(7);
-data_come8 <= data_divider7(8)&data_divider6(8)&data_divider5(8)&data_divider4(8)&data_divider3(8)&data_divider2(8)&data_divider1(8)&data_divider0(8);
-data_come9 <= data_divider7(9)&data_divider6(9)&data_divider5(9)&data_divider4(9)&data_divider3(9)&data_divider2(9)&data_divider1(9)&data_divider0(8);
-data_come10 <= data_divider7(10)&data_divider6(10)&data_divider5(10)&data_divider4(10)&data_divider3(10)&data_divider2(10)&data_divider1(10)&data_divider0(10);
-data_come11 <= data_divider7(11)&data_divider6(11)&data_divider5(11)&data_divider4(11)&data_divider3(11)&data_divider2(11)&data_divider1(11)&data_divider0(11);
-data_come12 <= data_divider7(12)&data_divider6(12)&data_divider5(12)&data_divider4(12)&data_divider3(12)&data_divider2(12)&data_divider1(12)&data_divider0(12);
-data_come13 <= data_divider7(13)&data_divider6(13)&data_divider5(13)&data_divider4(13)&data_divider3(13)&data_divider2(13)&data_divider1(13)&data_divider0(13);
-data_come14 <= data_divider7(14)&data_divider6(14)&data_divider5(14)&data_divider4(14)&data_divider3(14)&data_divider2(14)&data_divider1(14)&data_divider0(14);
-data_come15 <= data_divider7(15)&data_divider6(15)&data_divider5(15)&data_divider4(15)&data_divider3(15)&data_divider2(15)&data_divider1(15)&data_divider0(15);
-data_come16 <= data_divider7(16)&data_divider6(16)&data_divider5(16)&data_divider4(16)&data_divider3(16)&data_divider2(16)&data_divider1(16)&data_divider0(16);
-data_come17 <= data_divider7(17)&data_divider6(17)&data_divider5(17)&data_divider4(17)&data_divider3(17)&data_divider2(17)&data_divider1(17)&data_divider0(17);
-data_come18 <= data_divider7(18)&data_divider6(18)&data_divider5(18)&data_divider4(18)&data_divider3(18)&data_divider2(18)&data_divider1(18)&data_divider0(18);
-data_come19 <= data_divider7(19)&data_divider6(19)&data_divider5(19)&data_divider4(19)&data_divider3(19)&data_divider2(19)&data_divider1(19)&data_divider0(19);
-data_come20 <= data_divider7(20)&data_divider6(20)&data_divider5(20)&data_divider4(20)&data_divider3(20)&data_divider2(20)&data_divider1(20)&data_divider0(20);
-data_come21 <= data_divider7(21)&data_divider6(21)&data_divider5(21)&data_divider4(21)&data_divider3(21)&data_divider2(21)&data_divider1(21)&data_divider0(21);
-data_come22 <= data_divider7(22)&data_divider6(22)&data_divider5(22)&data_divider4(22)&data_divider3(22)&data_divider2(22)&data_divider1(22)&data_divider0(22);
-data_come23 <= data_divider7(23)&data_divider6(23)&data_divider5(23)&data_divider4(23)&data_divider3(23)&data_divider2(23)&data_divider1(23)&data_divider0(23);
-data_come24 <= data_divider7(24)&data_divider6(24)&data_divider5(24)&data_divider4(24)&data_divider3(24)&data_divider2(24)&data_divider1(24)&data_divider0(24);
-data_come25 <= data_divider7(25)&data_divider6(25)&data_divider5(25)&data_divider4(25)&data_divider3(25)&data_divider2(25)&data_divider1(25)&data_divider0(25);
-data_come26 <= data_divider7(26)&data_divider6(26)&data_divider5(26)&data_divider4(26)&data_divider3(26)&data_divider2(26)&data_divider1(26)&data_divider0(26);
-data_come27 <= data_divider7(27)&data_divider6(27)&data_divider5(27)&data_divider4(27)&data_divider3(27)&data_divider2(27)&data_divider1(27)&data_divider0(27);
-data_come28 <= data_divider7(28)&data_divider6(28)&data_divider5(28)&data_divider4(28)&data_divider3(28)&data_divider2(28)&data_divider1(28)&data_divider0(28);
-data_come29 <= data_divider7(29)&data_divider6(29)&data_divider5(29)&data_divider4(29)&data_divider3(29)&data_divider2(29)&data_divider1(29)&data_divider0(29);
-data_come30 <= data_divider7(30)&data_divider6(30)&data_divider5(30)&data_divider4(30)&data_divider3(30)&data_divider2(30)&data_divider1(30)&data_divider0(30);
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-data_come31 <= data_divider7(31)&data_divider6(31)&data_divider5(31)&data_divider4(31)&data_divider3(31)&data_divider2(31)&data_divider1(31)&data_divider0(31);
+
 data_came0 <= output23(0)&output22(0)&output21(0)&output20(0)&output19(0)&output18(0)&output17(0)&output16(0)&output15(0)&output14(0)&output13(0)&output12(0)&output11(0)&output10(0)&output9(0)&output8(0)&output7(0)&output6(0)&output5(0)&output4(0)&output3(0)&output2(0)&output1(0)&output0(0);
 data_came1 <= output23(1)&output22(1)&output21(1)&output20(1)&output19(1)&output18(1)&output17(1)&output16(1)&output15(1)&output14(1)&output13(1)&output12(1)&output11(1)&output10(1)&output9(1)&output8(1)&output7(1)&output6(1)&output5(1)&output4(1)&output3(1)&output2(1)&output1(1)&output0(1);
 data_came2 <= output23(2)&output22(2)&output21(2)&output20(2)&output19(2)&output18(2)&output17(2)&output16(2)&output15(2)&output14(2)&output13(2)&output12(2)&output11(2)&output10(2)&output9(2)&output8(2)&output7(2)&output6(2)&output5(2)&output4(2)&output3(2)&output2(2)&output1(2)&output0(2);
@@ -839,23 +518,17 @@ index1 <= to_integer(unsigned(bit_location(4 downto 0)));
 ---------------------------------------------------------------------------
 process(clk)
 	begin
-		if clk'event and clk = '1' then
-			sel(index8) <= "111";
-			sel(index7) <= "110";
-			sel(index6)  <= "101";
-			sel(index5) <= "100";
-			sel(index4) <= "011";
-			sel(index3) <= "010";
-			sel(index2) <= "001";
-			sel(index1) <= "000";
-			bit_out(index8) <= data_out(index8);
-			bit_out(index7) <= data_out(index7);
-			bit_out(index6) <= data_out(index6);
-			bit_out(index5) <= data_out(index5);
-			bit_out(index4) <= data_out(index4);
-			bit_out(index3) <= data_out(index3);
-			bit_out(index2) <= data_out(index2);
-			bit_out(index1) <= data_out(index1);
+		if clk'event and clk = '1' then 
+			if ready = '1' then
+			bit_out(index8) <= data_in(7);
+			bit_out(index7) <= data_in(6);
+			bit_out(index6) <= data_in(5);
+			bit_out(index5) <= data_in(4);
+			bit_out(index4) <= data_in(3);
+			bit_out(index3) <= data_in(2);
+			bit_out(index2) <= data_in(1);
+			bit_out(index1) <= data_in(0);
+			end if;
 			bit_out(to_integer(unsigned(tmp1(0)))) <= output(to_integer(unsigned(tmp1(0))));
 			bit_out(to_integer(unsigned(tmp1(1)))) <= output(to_integer(unsigned(tmp1(1))));
 			bit_out(to_integer(unsigned(tmp1(2)))) <= output(to_integer(unsigned(tmp1(2))));
@@ -880,10 +553,8 @@ process(clk)
 			bit_out(to_integer(unsigned(tmp1(21)))) <= output(to_integer(unsigned(tmp1(21))));
 			bit_out(to_integer(unsigned(tmp1(22)))) <= output(to_integer(unsigned(tmp1(22))));
 			bit_out(to_integer(unsigned(tmp1(23)))) <= output(to_integer(unsigned(tmp1(23))));
-			start <= '1';
-			
-			if count = 0 then
-				
+			start <= '1';	
+			if count > 0 then		
 			result(index8) <= temp8;
 			temp8 <= comparison(index8) xor bit_location(39 downto 35);
 			result(index7) <= temp7;
@@ -906,11 +577,21 @@ process(clk)
 			else count <= 0;
 			end if;
 			if (count > 2) then
-				if (result(count1) = "00000") then
-					tmp(count2) <= comparison(count1);
+				if count11 > 0 then
+				count11 <= count11 -1;
+				end if;
+				if (result(count11) = "11111")  then
+					tmp(count22) <= comparison(count11);
+					
+					if count2 > -1 then
 					count2 <= count2 - 1;
-					count1 <= count1 -1;
-					else count1 <= count1 - 1;
+					
+					end if;
+					if count22 > 0 then
+					count22 <= count22 -1;
+					
+					end if;
+			
 				end if;
 				if(count2 = -1) then
 					tmp1 <= tmp;
@@ -918,6 +599,9 @@ process(clk)
 				if (count2 = -1) then
 					count2 <= 23;
 					count1 <= 31;
+					count22<= 23;
+					count11<= 31;
+						
 				end if;
 			end if;
 		end if;
@@ -948,7 +632,7 @@ process(clk)
 				sel3(to_integer(unsigned(tmp1(1))))  <= "00001";
 				sel3(to_integer(unsigned(tmp1(0))))  <= "00000";
 			end if;
-		end if;		
+		end if;
 	end process;
 end arch;
 
